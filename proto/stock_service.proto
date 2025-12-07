@@ -6,22 +6,33 @@ option go_package = "github.com/Code0716/stock-price-repository/pb;pb";
 
 // StockService provides stock-related data
 service StockService {
-  // GetHighVolumeStockBrands retrieves all high volume stock brands
+  // GetHighVolumeStockBrands retrieves high volume stock brands with pagination support
   rpc GetHighVolumeStockBrands(GetHighVolumeStockBrandsRequest) returns (GetHighVolumeStockBrandsResponse);
 }
 
-// GetHighVolumeStockBrandsRequest is empty as we retrieve all records
-message GetHighVolumeStockBrandsRequest {}
+// GetHighVolumeStockBrandsRequest supports cursor-based pagination
+message GetHighVolumeStockBrandsRequest {
+  string symbol_from = 1;  // Cursor for pagination (ticker symbol). Retrieves brands greater than this symbol.
+  int32 limit = 2;         // Maximum number of records to retrieve. 0 means no limit (retrieve all).
+}
 
-// GetHighVolumeStockBrandsResponse contains list of high volume stock brands
+// GetHighVolumeStockBrandsResponse contains list of high volume stock brands with pagination info
 message GetHighVolumeStockBrandsResponse {
   repeated HighVolumeStockBrand brands = 1;
+  PaginationInfo pagination = 2;  // Pagination information (omitted if limit is 0)
 }
 
 // HighVolumeStockBrand represents a stock brand with high trading volume
 message HighVolumeStockBrand {
   string stock_brand_id = 1;
   string ticker_symbol = 2;
-  uint64 volume_average = 3;
-  string created_at = 4;
+  string company_name = 3;    // Company name retrieved from stock_brand table
+  uint64 volume_average = 4;
+  string created_at = 5;      // RFC3339 format (e.g., "2024-01-15T10:30:00Z")
+}
+
+// PaginationInfo contains pagination metadata
+message PaginationInfo {
+  string next_cursor = 1;  // Next cursor for retrieving the next page. Empty string means this is the last page.
+  int32 limit = 2;         // The limit used in the request
 }
