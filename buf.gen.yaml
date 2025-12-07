@@ -1,0 +1,15 @@
+version: v2
+managed:
+  enabled: true
+  override:
+    - file_option: go_package_prefix
+      value: github.com/Code0716/stock-price-repository
+plugins:
+  - remote: buf.build/protocolbuffers/go
+    out: ../pb
+    opt:
+      - paths=source_relative
+  - remote: buf.build/grpc/go
+    out: ../pb
+    opt:
+      - paths=source_relative

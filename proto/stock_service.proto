@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package stock;
+
+option go_package = "github.com/Code0716/stock-price-repository/pb;pb";
+
+// StockService provides stock-related data
+service StockService {
+  // GetHighVolumeStockBrands retrieves all high volume stock brands
+  rpc GetHighVolumeStockBrands(GetHighVolumeStockBrandsRequest) returns (GetHighVolumeStockBrandsResponse);
+}
+
+// GetHighVolumeStockBrandsRequest is empty as we retrieve all records
+message GetHighVolumeStockBrandsRequest {}
+
+// GetHighVolumeStockBrandsResponse contains list of high volume stock brands
+message GetHighVolumeStockBrandsResponse {
+  repeated HighVolumeStockBrand brands = 1;
+}
+
+// HighVolumeStockBrand represents a stock brand with high trading volume
+message HighVolumeStockBrand {
+  string stock_brand_id = 1;
+  string ticker_symbol = 2;
+  uint64 volume_average = 3;
+  string created_at = 4;
+}
